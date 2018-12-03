@@ -151,8 +151,8 @@ def main(args=None):
 
     img_size = args.image_size
 
-    train_set, train_labels = load_data(os.join(args.path_to_raw, 'train_data.npy'), os.join(args.path_to_labels, 'train_label.npy'))
-    val_set, val_labels = load_data(os.join(args.path_to_raw, 'val_data.npy'), os.join(args.path_to_labels, 'val_label.npy'))
+    train_set, train_labels = load_data(os.path.join(args.path_to_raw, 'train_data.npy'), os.path.join(args.path_to_labels, 'train_label.npy'))
+    val_set, val_labels = load_data(os.path.join(args.path_to_raw, 'val_data.npy'), os.path.join(args.path_to_labels, 'val_label.npy'))
 
     if args.convert_from_camvid:
         train_labels = map_labels(args.path_to_labels_list, train_labels, img_size[1], img_size[0])

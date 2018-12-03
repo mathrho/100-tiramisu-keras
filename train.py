@@ -50,6 +50,11 @@ def parse_args(args):
                         help='Defines number of epochs used for training. '
                              'Default: 250',
                         default=250)
+    parser.add_argument('--batch_size',
+                        type=int,
+                        help='Defines batch size for training. '
+                             'Default: 64',
+                        default=64)
     parser.add_argument('--learning_rate',
                         type=float,
                         help='Defines learning rate used for training. '
@@ -154,9 +159,9 @@ def main(args=None):
     train_set, train_labels = load_data(os.path.join(args.path_to_raw, 'train_data.npy'), os.path.join(args.path_to_labels, 'train_label.npy'))
     val_set, val_labels = load_data(os.path.join(args.path_to_raw, 'val_data.npy'), os.path.join(args.path_to_labels, 'val_label.npy'))
 
-    if args.convert_from_camvid:
-        train_labels = map_labels(args.path_to_labels_list, train_labels, img_size[1], img_size[0])
-        val_labels = map_labels(args.path_to_labels_list, val_labels, img_size[1], img_size[0])
+    #if args.convert_from_camvid:
+    #    train_labels = map_labels(args.path_to_labels_list, train_labels, img_size[1], img_size[0])
+    #    val_labels = map_labels(args.path_to_labels_list, val_labels, img_size[1], img_size[0])
 
     # take args.training_percentage of data for training
     n = len(train_set) + len(val_set)
@@ -168,8 +173,8 @@ def main(args=None):
     # val_set = raw[n_train:]
     # val_labels = labels[n_train:]
 
-    train_generator = AugmentationGenerator(train_set, train_labels, 1, train=True)
-    test_generator = AugmentationGenerator(val_set, val_labels, 1, train=False)
+    #train_generator = AugmentationGenerator(train_set, train_labels, 1, train=True)
+    #test_generator = AugmentationGenerator(val_set, val_labels, 1, train=False)
 
     input_shape = (224, 224, 3)
     img_input = Input(shape=input_shape)
@@ -187,9 +192,12 @@ def main(args=None):
                                  monitor='val_loss', save_weights_only=True, save_best_only=True)
     early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=args.patience, verbose=1, mode='auto')
 
-    model.fit_generator(train_generator, len(train_set), args.no_epochs, verbose=2,
-                        validation_data=test_generator, validation_steps=len(val_set),
-                        callbacks=[logging, checkpoint, early_stopping])
+    #model.fit_generator(train_generator, len(train_set), args.no_epochs, verbose=2,
+    #                    validation_data=test_generator, validation_steps=len(val_set),
+    #                    callbacks=[logging, checkpoint, early_stopping])
+    model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
+                        validation_data=(val_set, val_labels),
+                        callbacks=[logging, checkpoint, early_stopping], shuffle=True)
 
     model.save_weights(args.output_path)
 

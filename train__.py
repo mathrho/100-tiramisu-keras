@@ -1,4 +1,3 @@
-import os
 import sys
 import threading
 import glob
@@ -22,14 +21,14 @@ def parse_args(args):
                         help='Path for saving a training model as a *.h5 file. Default is models/new_tiramisu.h5',
                         default='models/new_tiramisu.h5')
     parser.add_argument('--path_to_raw',
-                        help='Path to raw images used for training. Default is camvid-master/data/',
-                        default='camvid-master/data/')
+                        help='Path to raw images used for training. Default is camvid-master/701_StillsRaw_full/',
+                        default='camvid-master/701_StillsRaw_full/')
     parser.add_argument('--image_size',
                         help='Size of the input image. Default is [360, 480]',
-                        default=(224, 224))
+                        default=(360, 480))
     parser.add_argument('--path_to_labels',
-                        help='Path to labeled images used for training. Default is camvid-master/data/',
-                        default='camvid-master/data/')
+                        help='Path to labeled images used for training. Default is camvid-master/LabeledApproved_full/',
+                        default='camvid-master/LabeledApproved_full/')
     parser.add_argument('--path_to_labels_list',
                         help='Path to file defining classes used in camvid dataset. '
                              'Only used if convert_from_camvid = True. Default is camvid-master/label_colors.txt',
@@ -39,12 +38,12 @@ def parse_args(args):
                         default='logging/')
     parser.add_argument('--convert_from_camvid',
                         help='Flag that defines if camvid data is used. '
-                             'If enabled it maps camvid data labeling to integers. Default: False',
-                        default=False)
+                             'If enabled it maps camvid data labeling to integers. Default: True',
+                        default=True)
     parser.add_argument('--training_percentage',
                         help='Defines percentage of total data that will be used for training. '
                              'Default: 70 training 30 validation',
-                        default=None)
+                        default=70)
     parser.add_argument('--no_epochs',
                         type=int,
                         help='Defines number of epochs used for training. '
@@ -126,18 +125,24 @@ class AugmentationGenerator(object):
         return np.stack(xs), np.stack(ys).reshape(len(ys), -1, self.ych)
 
 
-def load_data(path_to_raw, path_to_labels):
+def load_image(fn, img_size):
+    return np.array(Image.open(fn).resize(img_size, Image.NEAREST))
+
+
+def load_data(path_to_raw, path_to_labels, img_size):
 
     # Load images
-    images = np.load(path_to_raw)
+    image_files = glob.glob(path_to_raw + '*.png')
+    images = np.stack([load_image(filename, img_size) for filename in image_files])
 
     # Load labels
-    labels = np.load(path_to_labels)
+    label_files = glob.glob(path_to_labels + '*.png')
+    labels = np.stack([load_image(filename, img_size) for filename in label_files])
 
     # Normalize pixel values in images
     images = images / 255.
-    images -= 0.39  # mean used for normalization - specific to CamVid dataset
-    images /= 0.30  # std used for normalization - specific to CamVid dataset
+    images -= images.mean()
+    images /= images.std()
 
     return images, labels
 
@@ -151,22 +156,20 @@ def main(args=None):
 
     img_size = args.image_size
 
-    train_set, train_labels = load_data(os.join(args.path_to_raw, 'train_data.npy'), os.join(args.path_to_labels, 'train_label.npy'))
-    val_set, val_labels = load_data(os.join(args.path_to_raw, 'val_data.npy'), os.join(args.path_to_labels, 'val_label.npy'))
+    raw, labels = load_data(args.path_to_raw, args.path_to_labels, img_size)
 
     if args.convert_from_camvid:
-        train_labels = map_labels(args.path_to_labels_list, train_labels, img_size[1], img_size[0])
-        val_labels = map_labels(args.path_to_labels_list, val_labels, img_size[1], img_size[0])
+        labels = map_labels(args.path_to_labels_list, labels, img_size[1], img_size[0])
 
     # take args.training_percentage of data for training
-    n = len(train_set) + len(val_set)
-    n_train = len(train_set)
+    n = len(raw)
+    n_train = round(n*args.training_percentage/100)
 
     # divide into train and val
-    # train_set = raw[:n_train]
-    # train_labels = labels[:n_train]
-    # val_set = raw[n_train:]
-    # val_labels = labels[n_train:]
+    train_set = raw[:n_train]
+    train_labels = labels[:n_train]
+    val_set = raw[n_train:]
+    val_labels = labels[n_train:]
 
     train_generator = AugmentationGenerator(train_set, train_labels, 1, train=True)
     test_generator = AugmentationGenerator(val_set, val_labels, 1, train=False)

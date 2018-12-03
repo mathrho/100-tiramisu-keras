@@ -160,8 +160,8 @@ def main(args=None):
     val_set, val_labels = load_data(os.path.join(args.path_to_raw, 'val_data.npy'), os.path.join(args.path_to_labels, 'val_label.npy'))
 
     #if args.convert_from_camvid:
-    #    train_labels = map_labels(args.path_to_labels_list, train_labels, img_size[1], img_size[0])
-    #    val_labels = map_labels(args.path_to_labels_list, val_labels, img_size[1], img_size[0])
+    #   train_labels = map_labels(args.path_to_labels_list, train_labels, img_size[1], img_size[0])
+    #   val_labels = map_labels(args.path_to_labels_list, val_labels, img_size[1], img_size[0])
 
     # take args.training_percentage of data for training
     n = len(train_set) + len(val_set)
@@ -178,7 +178,7 @@ def main(args=None):
 
     input_shape = (224, 224, 3)
     img_input = Input(shape=input_shape)
-    x = create_tiramisu(32, img_input)
+    x = create_tiramisu(12, img_input)
     model = Model(img_input, x)
 
     if not args.train_from_zero:

@@ -187,6 +187,7 @@ def main(args=None):
     img_input = Input(shape=input_shape)
     x = create_tiramisu(12, img_input)
     model = Model(img_input, x)
+    print(model)
 
     if not args.train_from_zero:
         model.load_weights(args.path_to_model_weights)
@@ -202,7 +203,7 @@ def main(args=None):
     #model.fit_generator(train_generator, len(train_set), args.no_epochs, verbose=2,
     #                    validation_data=test_generator, validation_steps=len(val_set),
     #                    callbacks=[logging, checkpoint, early_stopping])
-    model.fit(train_set, train_labels, batch_size=8, epochs=args.no_epochs, verbose=2,
+    model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
                         callbacks=[logging, checkpoint, early_stopping], validation_data=(val_set, val_labels),
                         class_weight=class_weighting, shuffle=True)
 

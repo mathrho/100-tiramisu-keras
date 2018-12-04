@@ -68,8 +68,8 @@ def parse_args(args):
     parser.add_argument('--batch_size',
                         type=int,
                         help='Defines batch size for training. '
-                             'Default: 64',
-                        default=64)
+                             'Default: 8',
+                        default=8)
     parser.add_argument('--learning_rate',
                         type=float,
                         help='Defines learning rate used for training. '

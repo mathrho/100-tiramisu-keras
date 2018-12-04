@@ -199,7 +199,7 @@ def main(args=None):
     if not args.train_from_zero:
         model.load_weights(args.path_to_model_weights)
 
-    model.compile(loss='sparse_categorical_crossentropy',
+    model.compile(loss='categorical_crossentropy',
                   optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.99995), metrics=["accuracy"])
 
     logging = TensorBoard(log_dir=args.log_dir)

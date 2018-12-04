@@ -81,6 +81,11 @@ def parse_args(args):
                         help='Boolean, defines if training from scratch or resuming from saved h5 file. '
                              'Default: True',
                         default=True)
+    parser.add_argument('--gpu',
+                        type=int,
+                        help='Defines gpu id to use. '
+                             'Default: 0',
+                        default=0)
 
     return parser.parse_args(args)
 
@@ -160,6 +165,8 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
     args = parse_args(args)
+
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(args.gpu)
 
     img_size = args.image_size
 

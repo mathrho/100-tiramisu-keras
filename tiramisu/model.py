@@ -74,6 +74,6 @@ def create_tiramisu(nb_classes, img_input, nb_dense_block=6,
     x = up_path(added, reverse(skips[:-1]), reverse(nb_layers[:-1]), growth_rate, p, wd)
 
     x = conv(x, nb_classes, 1, wd, 0)
-    _, r, c, f = x.get_shape().as_list()
-    x = Reshape((-1, nb_classes))(x)
+    #_, r, c, f = x.get_shape().as_list()
+    #x = Reshape((-1, nb_classes))(x)
     return Activation('softmax')(x)

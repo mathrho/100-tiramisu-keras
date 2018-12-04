@@ -204,18 +204,19 @@ def main(args=None):
 
     logging = TensorBoard(log_dir=args.log_dir)
     checkpoint = ModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",
-                                 monitor='val_loss', save_weights_only=True, save_best_only=True)
+                                 monitor='val_loss', save_weights_only=False, save_best_only=True)
     early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=args.patience, verbose=1, mode='auto')
 
     #model.fit_generator(train_generator, len(train_set), args.no_epochs, verbose=2,
     #                    validation_data=test_generator, validation_steps=len(val_set),
     #                    callbacks=[logging, checkpoint, early_stopping])
-    model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
+    history = model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
                         callbacks=[logging, checkpoint, early_stopping], validation_data=(val_set, val_labels),
                         class_weight=class_weighting, shuffle=True)
 
     model.save_weights(args.output_path)
 
+    print(history.history.keys())
 
 if __name__ == '__main__':
     main()

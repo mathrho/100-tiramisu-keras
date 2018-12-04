@@ -70,8 +70,8 @@ def parse_args(args):
     parser.add_argument('--patience',
                         type=int,
                         help='Defines patience for early stopping. '
-                             'Default: 50',
-                        default=50)
+                             'Default: 100',
+                        default=100)
     parser.add_argument('--path_to_model_weights',
                         help='Path to saved model weights if training should be resumed. '
                              'Default: models/new_tiramisu.h5',
@@ -200,7 +200,7 @@ def main(args=None):
         model.load_weights(args.path_to_model_weights)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.99995), metrics=["accuracy"])
+                  optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.995), metrics=["accuracy"])
 
     logging = TensorBoard(log_dir=args.log_dir)
     checkpoint = ModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",

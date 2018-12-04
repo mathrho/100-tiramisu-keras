@@ -52,14 +52,6 @@ def parse_args(args):
     parser.add_argument('--log_dir',
                         help='Path for storing tensorboard logging. Default is logging/',
                         default='logging/')
-    parser.add_argument('--convert_from_camvid',
-                        help='Flag that defines if camvid data is used. '
-                             'If enabled it maps camvid data labeling to integers. Default: False',
-                        default=False)
-    parser.add_argument('--training_percentage',
-                        help='Defines percentage of total data that will be used for training. '
-                             'Default: 70 training 30 validation',
-                        default=None)
     parser.add_argument('--no_epochs',
                         type=int,
                         help='Defines number of epochs used for training. '
@@ -210,7 +202,7 @@ def main(args=None):
     #model.fit_generator(train_generator, len(train_set), args.no_epochs, verbose=2,
     #                    validation_data=test_generator, validation_steps=len(val_set),
     #                    callbacks=[logging, checkpoint, early_stopping])
-    model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
+    model.fit(train_set, train_labels, batch_size=8, epochs=args.no_epochs, verbose=2,
                         callbacks=[logging, checkpoint, early_stopping], validation_data=(val_set, val_labels),
                         class_weight=class_weighting, shuffle=True)
 

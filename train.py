@@ -140,9 +140,9 @@ def load_data(path_to_raw, path_to_labels):
     labels = np.load(path_to_labels)
 
     # Normalize pixel values in images
-    images = images / 255.
-    images -= 0.39  # mean used for normalization - specific to CamVid dataset
-    images /= 0.30  # std used for normalization - specific to CamVid dataset
+    # images = images / 255.
+    # images -= 0.39  # mean used for normalization - specific to CamVid dataset
+    # images /= 0.30  # std used for normalization - specific to CamVid dataset
 
     return images, labels
 

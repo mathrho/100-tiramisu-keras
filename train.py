@@ -196,8 +196,8 @@ def main(args=None):
     #                    validation_data=test_generator, validation_steps=len(val_set),
     #                    callbacks=[logging, checkpoint, early_stopping])
     model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
-                        validation_data=(val_set, val_labels),
-                        callbacks=[logging, checkpoint, early_stopping], shuffle=True)
+                        callbacks=[logging, checkpoint, early_stopping], validation_data=(val_set, val_labels),
+                        class_weight=class_weighting, shuffle=True)
 
     model.save_weights(args.output_path)
 

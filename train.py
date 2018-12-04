@@ -187,7 +187,7 @@ def main(args=None):
     img_input = Input(shape=input_shape)
     x = create_tiramisu(12, img_input)
     model = Model(img_input, x)
-    print(model)
+    print(model.summary())
 
     if not args.train_from_zero:
         model.load_weights(args.path_to_model_weights)

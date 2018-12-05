@@ -98,7 +98,6 @@ def main(args=None):
     x = create_tiramisu(args.nb_classes, img_input)
     model = Model(img_input, x)
     print(model.summary())
-    return
 
     if not args.train_from_zero:
         model.load_weights(args.path_to_model_weights)

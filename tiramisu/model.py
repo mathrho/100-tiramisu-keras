@@ -73,14 +73,9 @@ def create_tiramisu(nb_classes, img_input, nb_dense_block=6,
 
     x = conv(img_input, nb_filter, 3, wd, 0)
     skips, added = down_path(x, nb_layers, growth_rate, p, wd)
-    #for l in skips:
-    #    print(l.output_shape)
-    #print('-----------------')
-    #for l in added:
-    #    print(l.output_shape)
-    return x
+    return added
     x = up_path(added, reverse(skips[:-1]), reverse(nb_layers[:-1]), growth_rate, p, wd)
-    
+
     x = conv(x, nb_classes, 1, wd, 0)
     #_, r, c, f = x.get_shape().as_list()
     #x = Reshape((-1, nb_classes))(x)

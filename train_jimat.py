@@ -34,8 +34,8 @@ def parse_args(args):
     parser.add_argument('--no_epochs',
                         type=int,
                         help='Defines number of epochs used for training. '
-                             'Default: 1000',
-                        default=1000)
+                             'Default: 5000',
+                        default=5000)
     parser.add_argument('--nb_classes',
                         type=int,
                         help='Defines number of classes for training. '
@@ -44,8 +44,8 @@ def parse_args(args):
     parser.add_argument('--batch_size',
                         type=int,
                         help='Defines batch size for training. '
-                             'Default: 8',
-                        default=8)
+                             'Default: 16',
+                        default=16)
     parser.add_argument('--learning_rate',
                         type=float,
                         help='Defines learning rate used for training. '
@@ -55,7 +55,7 @@ def parse_args(args):
                         type=int,
                         help='Defines patience for early stopping. '
                              'Default: 500',
-                        default=100)
+                        default=500)
     parser.add_argument('--path_to_model_weights',
                         help='Path to saved model weights if training should be resumed. '
                              'Default: models/new_tiramisu.h5',

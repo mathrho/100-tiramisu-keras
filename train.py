@@ -55,8 +55,8 @@ def parse_args(args):
     parser.add_argument('--no_epochs',
                         type=int,
                         help='Defines number of epochs used for training. '
-                             'Default: 2500',
-                        default=2500)
+                             'Default: 500',
+                        default=500)
     parser.add_argument('--batch_size',
                         type=int,
                         help='Defines batch size for training. '

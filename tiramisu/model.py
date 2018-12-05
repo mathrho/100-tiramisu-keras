@@ -26,9 +26,9 @@ def dense_block(n, x, growth_rate, p, wd):
 
 def transition_dn(x, p, wd):
     # in the paper stride=1 but better results with stride=2
-    return conv_relu_bn(x, x.get_shape().as_list()[-1], sz=1, p=p, wd=wd, stride=2)
     #x = conv_relu_bn(x, x.get_shape().as_list()[-1], sz=1, p=p, wd=wd, stride=1)
     #return MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding='same')(x)
+    return conv_relu_bn(x, x.get_shape().as_list()[-1], sz=1, p=p, wd=wd, stride=2)
 
 
 def down_path(x, nb_layers, growth_rate, p, wd):
@@ -73,10 +73,9 @@ def create_tiramisu(nb_classes, img_input, nb_dense_block=6,
 
     x = conv(img_input, nb_filter, 3, wd, 0)
     skips, added = down_path(x, nb_layers, growth_rate, p, wd)
-    return added
     x = up_path(added, reverse(skips[:-1]), reverse(nb_layers[:-1]), growth_rate, p, wd)
 
     x = conv(x, nb_classes, 1, wd, 0)
     #_, r, c, f = x.get_shape().as_list()
     #x = Reshape((-1, nb_classes))(x)
-    #return Activation('softmax')(x)
+    return Activation('softmax')(x)

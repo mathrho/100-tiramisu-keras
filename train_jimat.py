@@ -27,7 +27,7 @@ def parse_args(args):
                         default='jimat/data')
     parser.add_argument('--image_size',
                         help='Size of the input image. Default is [224, 224]',
-                        default=(350, 350))
+                        default=(352, 352))
     parser.add_argument('--log_dir',
                         help='Path for storing tensorboard logging. Default is logging/',
                         default='logging/')
@@ -93,7 +93,7 @@ def main(args=None):
     val_generator = data_generator_s31(
         datadir=os.path.join(args.path_to_raw, 'val'), batch_size=args.batch_size, input_size=img_size, nb_classes=args.nb_classes, separator='_')
 
-    input_shape = (350, 350, 3) #img_size + (3,)
+    input_shape = img_size + (3,)
     img_input = Input(shape=input_shape)
     x = create_tiramisu(args.nb_classes, img_input)
     model = Model(img_input, x)

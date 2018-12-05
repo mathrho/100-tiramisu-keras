@@ -26,7 +26,7 @@ def dense_block(n, x, growth_rate, p, wd):
 
 def transition_dn(x, p, wd):
     # in the paper stride=1 but better results with stride=2
-    return conv_relu_bn(x, x.get_shape().as_list()[-1], sz=1, p=p, wd=wd, stride=1)
+    return conv_relu_bn(x, x.get_shape().as_list()[-1], sz=1, p=p, wd=wd, stride=2)
 
 
 def down_path(x, nb_layers, growth_rate, p, wd):

@@ -34,8 +34,8 @@ def parse_args(args):
     parser.add_argument('--no_epochs',
                         type=int,
                         help='Defines number of epochs used for training. '
-                             'Default: 5000',
-                        default=5000)
+                             'Default: 1000',
+                        default=1000)
     parser.add_argument('--nb_classes',
                         type=int,
                         help='Defines number of classes for training. '
@@ -44,8 +44,8 @@ def parse_args(args):
     parser.add_argument('--batch_size',
                         type=int,
                         help='Defines batch size for training. '
-                             'Default: 4',
-                        default=4)
+                             'Default: 16',
+                        default=16)
     parser.add_argument('--learning_rate',
                         type=float,
                         help='Defines learning rate used for training. '
@@ -54,8 +54,8 @@ def parse_args(args):
     parser.add_argument('--patience',
                         type=int,
                         help='Defines patience for early stopping. '
-                             'Default: 500',
-                        default=500)
+                             'Default: 200',
+                        default=200)
     parser.add_argument('--path_to_model_weights',
                         help='Path to saved model weights if training should be resumed. '
                              'Default: models/new_tiramisu.h5',
@@ -119,7 +119,7 @@ def main(args=None):
     #history = model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
     #                callbacks=[logging, checkpoint, early_stopping], validation_data=(val_set, val_labels),
     #                class_weight=class_weighting, shuffle=True)
-    history = model.fit_generator(generator=train_generator, epochs=500, verbose=2, steps_per_epoch=500,
+    history = model.fit_generator(generator=train_generator, epochs=1000, verbose=2, steps_per_epoch=500,
                                   validation_data=val_generator, validation_steps=31,
                                   callbacks=[logging, checkpoint, early_stopping])
 

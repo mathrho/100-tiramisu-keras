@@ -2,7 +2,6 @@ import os
 import sys
 import threading
 import glob
-from PIL import Image
 import random
 import argparse
 
@@ -103,7 +102,7 @@ def main(args=None):
         model.load_weights(args.path_to_model_weights)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.995), metrics=["accuracy"])
+                  optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.99995), metrics=["accuracy"])
 
     logging = TensorBoard(log_dir=args.log_dir)
     checkpoint = ModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",

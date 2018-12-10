@@ -6,8 +6,8 @@ from scipy.ndimage import zoom
 from collections import defaultdict
 
 #DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
-DATA_MEAN = 
-DATA_STD = 
+#DATA_MEAN = 
+#DATA_STD = 
 
 def preprocess_img(img):
     #img = imresize(img, input_shape)

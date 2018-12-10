@@ -119,7 +119,7 @@ def main(args=None):
     #history = model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
     #                callbacks=[logging, checkpoint, early_stopping], validation_data=(val_set, val_labels),
     #                class_weight=class_weighting, shuffle=True)
-    history = model.fit_generator(generator=train_generator, epochs=5000, verbose=2, steps_per_epoch=1000,
+    history = model.fit_generator(generator=train_generator, epochs=500, verbose=2, steps_per_epoch=500,
                                   validation_data=val_generator, validation_steps=31,
                                   callbacks=[logging, checkpoint, early_stopping])
 

@@ -25,7 +25,7 @@ def main(args=None):
     val_data, val_data = data_loader(
         datadir=os.path.join(path_to_raw, 'val'), input_size=(352,352), nb_classes=2, separator='_', padding=True)
 
-    images = np.stack([train_data, val_data])
+    images = np.concatenate((train_data, val_data), axis=0)
     # Normalize pixel values in images
     images = images / 255.
     img_mean = images.mean()

@@ -16,6 +16,9 @@ def main(args=None):
     path_to_raw = './jimat/data'
     train_len = int(len(os.listdir(os.path.join(path_to_raw, 'train'))) / 2)
     val_len = int(len(os.listdir(os.path.join(path_to_raw, 'val'))) / 2)
+    print('training: '+str(train_len))
+    print('val: '+str(val_len))
+
     train_data, train_label = data_loader(
         datadir=os.path.join(path_to_raw, 'train'), input_size=(352,352), nb_classes=2, separator='_', padding=True)
     val_data, val_data = data_loader(

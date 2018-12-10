@@ -9,6 +9,7 @@ import keras
 from keras.models import Model
 from keras.layers import *
 from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping
+from keras.utils import multi_gpu_model
 from python_utils.preprocessing import data_generator_s31
 from python_utils.callbacks import callbacks
 
@@ -64,11 +65,11 @@ def parse_args(args):
                         help='Boolean, defines if training from scratch or resuming from saved h5 file. '
                              'Default: True',
                         default=True)
-    parser.add_argument('--gpu',
-                        type=int,
-                        help='Defines gpu id to use. '
-                             'Default: 0',
-                        default=0)
+    parser.add_argument('--use_multi_gpu',
+                        type=bool,
+                        help='Defines if use multiple gpu. '
+                             'Default: True',
+                        default=True)
 
     return parser.parse_args(args)
 
@@ -80,7 +81,7 @@ def main(args=None):
         args = sys.argv[1:]
     args = parse_args(args)
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = str(args.gpu)
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3' # str(args.gpu)
 
     img_size = args.image_size
 
@@ -88,9 +89,9 @@ def main(args=None):
     val_len = int(len(os.listdir(os.path.join(args.path_to_raw, 'val'))) / 2)
 
     train_generator = data_generator_s31(
-        datadir=os.path.join(args.path_to_raw, 'train'), batch_size=args.batch_size, input_size=img_size, nb_classes=args.nb_classes, separator='_')
+        datadir=os.path.join(args.path_to_raw, 'train'), batch_size=args.batch_size, input_size=img_size, nb_classes=args.nb_classes, separator='_', padding=True)
     val_generator = data_generator_s31(
-        datadir=os.path.join(args.path_to_raw, 'val'), batch_size=args.batch_size, input_size=img_size, nb_classes=args.nb_classes, separator='_')
+        datadir=os.path.join(args.path_to_raw, 'val'), batch_size=args.batch_size, input_size=img_size, nb_classes=args.nb_classes, separator='_', padding=True)
 
     input_shape = img_size + (3,)
     img_input = Input(shape=input_shape)
@@ -100,6 +101,9 @@ def main(args=None):
 
     if not args.train_from_zero:
         model.load_weights(args.path_to_model_weights)
+
+    if args.use_multi_gpu:
+        model = multi_gpu_model(model, gpus=4, cpu_merge=False)
 
     model.compile(loss='categorical_crossentropy',
                   optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.99995), metrics=["accuracy"])

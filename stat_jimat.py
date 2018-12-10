@@ -4,6 +4,7 @@ import threading
 import glob
 import random
 import argparse
+import numpy as np
 
 from python_utils.preprocessing import data_loader
 

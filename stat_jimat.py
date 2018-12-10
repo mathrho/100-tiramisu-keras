@@ -33,8 +33,10 @@ def main(args=None):
     img_mean = images.mean()
     img_std = images.std()
 
-    np.savetxt('DATA_MEAN', img_mean, delimiter=',')
-    np.savetxt('DATA_STD', img_std, delimiter=',')
+    print 'MEAN: %f' % (img_mean,)
+    print 'STD: %f' % (img_std,)
+
+    
 
 if __name__ == '__main__':
     main()

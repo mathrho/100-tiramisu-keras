@@ -115,7 +115,7 @@ def data_loader(datadir='', nb_classes = None, input_size=None, separator='_', p
   
   #shuffle and gen values
   random.shuffle(values)
-  values = values[1:min(10000,len(values))]
+  values = values[:min(10000,len(values))]
 
   nb_pairs = len(values)
   images = np.zeros([nb_pairs, input_size[0], input_size[1], 3], dtype=np.float32)

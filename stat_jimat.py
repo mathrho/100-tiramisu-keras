@@ -10,8 +10,8 @@ from python_utils.preprocessing import data_loader
 def main(args=None):
 
     # parse arguments
-    if args is None:
-        args = sys.argv[1:]
+    #if args is None:
+    #    args = sys.argv[1:]
 
     path_to_raw = './jimat/data'
     train_len = int(len(os.listdir(os.path.join(path_to_raw, 'train'))) / 2)

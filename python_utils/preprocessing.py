@@ -24,8 +24,8 @@ def preprocess_img(img):
     return img
 
 def update_inputs(batch_size = None, input_size = None, num_classes = None):
-  return np.zeros([batch_size, input_size[0], input_size[1], 3], dtype=float32), \
-    np.zeros([batch_size, input_size[0], input_size[1], num_classes], dtype=float32)
+  return np.zeros([batch_size, input_size[0], input_size[1], 3], dtype=np.float32), \
+    np.zeros([batch_size, input_size[0], input_size[1], num_classes], dtype=np.float32)
 
 def data_generator_s31(datadir='', nb_classes = None, batch_size = None, input_size=None, separator='_', padding=True):
   if not os.path.exists(datadir):
@@ -118,8 +118,8 @@ def data_loader(datadir='', nb_classes = None, input_size=None, separator='_', p
   values = values[1:10000]
 
   nb_pairs = len(values)
-  images = np.zeros([nb_pairs, input_size[0], input_size[1], 3], dtype=float32)
-  labels = np.zeros([nb_pairs, input_size[0], input_size[1], nb_classes], dtype=float32)
+  images = np.zeros([nb_pairs, input_size[0], input_size[1], 3], dtype=np.float32)
+  labels = np.zeros([nb_pairs, input_size[0], input_size[1], nb_classes], dtype=np.float32)
   for i, d in enumerate(values):
     img = imread(os.path.join(datadir, d['image']), mode='RGB')
     y = imread(os.path.join(datadir, d['anno']), mode='L')

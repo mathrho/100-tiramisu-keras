@@ -6,8 +6,8 @@ from scipy.ndimage import zoom
 from collections import defaultdict
 
 #DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
-#DATA_MEAN = 
-#DATA_STD = 
+DATA_MEAN = 0.773994
+DATA_STD = 0.306455
 
 def preprocess_img(img):
     #img = imresize(img, input_shape)
@@ -114,8 +114,8 @@ def data_loader(datadir='', nb_classes = None, input_size=None, separator='_', p
   values = data.values()
   
   #shuffle and gen values
-  random.shuffle(values)
-  values = values[:min(10000,len(values))]
+  #random.shuffle(values)
+  #values = values[:min(10000,len(values))]
 
   nb_pairs = len(values)
   images = np.zeros([nb_pairs, input_size[0], input_size[1], 3], dtype=np.float32)
@@ -137,6 +137,6 @@ def data_loader(datadir='', nb_classes = None, input_size=None, separator='_', p
     labels[i] = y
   
   ######
-  #images = preprocess_img(images)
+  images = preprocess_img(images)
   return images, labels
 

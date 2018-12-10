@@ -55,7 +55,7 @@ def data_generator_s31(datadir='', nb_classes = None, batch_size = None, input_s
   values = data.values()
   #shuffle and gen values
   random.shuffle(values)
-  return generate(values, nb_classes, batch_size, input_size, datadir)
+  return generate(values, nb_classes, batch_size, input_size, datadir, padding)
 
 def generate(values, nb_classes, batch_size, input_size, datadir, padding):
   while 1:

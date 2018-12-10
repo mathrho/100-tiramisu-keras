@@ -22,7 +22,7 @@ def main(args=None):
 
     train_data, train_label = data_loader(
         datadir=os.path.join(path_to_raw, 'train'), input_size=(352,352), nb_classes=2, separator='_', padding=True)
-    val_data, val_data = data_loader(
+    val_data, val_label = data_loader(
         datadir=os.path.join(path_to_raw, 'val'), input_size=(352,352), nb_classes=2, separator='_', padding=True)
 
     print train_data.shape

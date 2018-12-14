@@ -6,6 +6,7 @@ import random
 import argparse
 
 import keras
+import tensorflow as tf
 from keras.models import Model
 from keras.layers import *
 from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping

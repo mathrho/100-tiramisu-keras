@@ -13,10 +13,10 @@ class AltModelCheckpoint(ModelCheckpoint):
         """
 
         self.alternate_model = alternate_model
-        super().__init__(filepath, **kwargs)
+        super(AltModelCheckpoint, self).__init__(filepath, **kwargs)
 
     def on_epoch_end(self, epoch, logs=None):
         model_before = self.model
         self.model = self.alternate_model
-        super().on_epoch_end(epoch, logs)
+        super(AltModelCheckpoint, self).on_epoch_end(epoch, logs)
         self.model = model_before

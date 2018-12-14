@@ -20,8 +20,8 @@ def parse_args(args):
     parser = argparse.ArgumentParser(description='Script for training The One Hundred Layers Tiramisu network.')
 
     parser.add_argument('--output_path',
-                        help='Path for saving a training model as a *.h5 file. Default is models/new_tiramisu.h5',
-                        default='models/jimat_tiramisu.h5')
+                        help='Path for saving a training model as a *.h5 file. Default is models/jimat_tiramisu.h5',
+                        default='models/jimat_tiramisu67.h5')
     parser.add_argument('--path_to_raw',
                         help='Path to raw images used for training. Default is jimat/data/',
                         default='jimat/data')

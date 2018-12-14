@@ -4,7 +4,7 @@ import keras.backend as K
 from keras.callbacks import Callback, TensorBoard, ReduceLROnPlateau, ModelCheckpoint
 
 class LrReducer(Callback):
-  def __init__(self, base_lr = 0.01, max_epoch = 300, power=0.9, verbose=1):
+  def __init__(self, base_lr = 0.01, max_epoch = 1000, power=0.9, verbose=1):
     super(Callback, self).__init__()
     self.max_epoch = max_epoch
     self.power = power

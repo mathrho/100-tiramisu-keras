@@ -14,7 +14,7 @@ from python_utils.preprocessing import data_generator_s31
 from python_utils.callbacks import callbacks
 
 from tiramisu.model import create_tiramisu
-
+from alt_model_checkpoint import AltModelCheckpoint
 
 def parse_args(args):
     parser = argparse.ArgumentParser(description='Script for training The One Hundred Layers Tiramisu network.')
@@ -34,8 +34,8 @@ def parse_args(args):
     parser.add_argument('--no_epochs',
                         type=int,
                         help='Defines number of epochs used for training. '
-                             'Default: 1000',
-                        default=1000)
+                             'Default: 500',
+                        default=500)
     parser.add_argument('--nb_classes',
                         type=int,
                         help='Defines number of classes for training. '
@@ -54,8 +54,8 @@ def parse_args(args):
     parser.add_argument('--patience',
                         type=int,
                         help='Defines patience for early stopping. '
-                             'Default: 200',
-                        default=200)
+                             'Default: 150',
+                        default=150)
     parser.add_argument('--path_to_model_weights',
                         help='Path to saved model weights if training should be resumed. '
                              'Default: models/new_tiramisu.h5',
@@ -93,25 +93,36 @@ def main(args=None):
     val_generator = data_generator_s31(
         datadir=os.path.join(args.path_to_raw, 'val'), batch_size=args.batch_size, input_size=img_size, nb_classes=args.nb_classes, separator='_', padding=True)
 
+    # config network architecture
+    #nb_dense_block=6
+    #growth_rate=16
+    #nb_filter=48
+    #nb_layers_per_block=[4, 5, 7, 10, 12, 15]
+    nb_layers_per_block=[5, 5, 5, 5, 5, 5]
     input_shape = img_size + (3,)
-    img_input = Input(shape=input_shape)
-    x = create_tiramisu(args.nb_classes, img_input)
-    model = Model(img_input, x)
-    print(model.summary())
+    with tf.device('/cpu:0'):
+        img_input = Input(shape=input_shape)
+        x = create_tiramisu(args.nb_classes, img_input, nb_layers_per_block=nb_layers_per_block)
+        model = Model(img_input, x)
+        print(model.summary())
 
     if not args.train_from_zero:
         model.load_weights(args.path_to_model_weights)
 
     if args.use_multi_gpu:
-        model = multi_gpu_model(model, gpus=4, cpu_merge=False)
+        #model = multi_gpu_model(model, gpus=4, cpu_merge=False)
+        parallel_model = multi_gpu_model(model, gpus=4)
 
-    model.compile(loss='categorical_crossentropy',
-                  optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.99995), metrics=["accuracy"])
+    parallel_model.compile(loss='categorical_crossentropy',
+                           optimizer=keras.optimizers.RMSprop(args.learning_rate, decay=1-0.99995), metrics=["accuracy"])
 
     logging = TensorBoard(log_dir=args.log_dir)
-    checkpoint = ModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",
-                                 monitor='val_loss', save_weights_only=False, save_best_only=True)
     early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=args.patience, verbose=1, mode='auto')
+    #checkpoint = ModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",
+    #                             monitor='val_loss', save_weights_only=False, save_best_only=True)
+    checkpoint = AltModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",
+                                    model,
+                                    monitor='val_loss', save_weights_only=False, save_best_only=True)
 
     #model.fit_generator(train_generator, len(train_set), args.no_epochs, verbose=2,
     #                    validation_data=test_generator, validation_steps=len(val_set),
@@ -119,17 +130,16 @@ def main(args=None):
     #history = model.fit(train_set, train_labels, batch_size=args.batch_size, epochs=args.no_epochs, verbose=2,
     #                callbacks=[logging, checkpoint, early_stopping], validation_data=(val_set, val_labels),
     #                class_weight=class_weighting, shuffle=True)
-    history = model.fit_generator(generator=train_generator, epochs=1000, verbose=2, steps_per_epoch=500,
-                                  validation_data=val_generator, validation_steps=31,
-                                  callbacks=[logging, checkpoint, early_stopping])
+    history = parallel_model.fit_generator(generator=train_generator, epochs=500, verbose=2, steps_per_epoch=500,
+                                           validation_data=val_generator, validation_steps=31,
+                                           callbacks=[logging, checkpoint, early_stopping])
 
-    model.save_weights(args.output_path)
+    model.save(args.output_path)
 
     print(history.history.keys())
 
 if __name__ == '__main__':
     main()
-
 
 
 

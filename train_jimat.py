@@ -15,7 +15,7 @@ from python_utils.preprocessing import data_generator_s31
 from python_utils.callbacks import callbacks
 
 from tiramisu.model import create_tiramisu
-from alt_model_checkpoint.alt_model_checkpoint import AltModelCheckpoint
+from alt_model_checkpoint import AltModelCheckpoint
 
 def parse_args(args):
     parser = argparse.ArgumentParser(description='Script for training The One Hundred Layers Tiramisu network.')
@@ -122,8 +122,7 @@ def main(args=None):
     #checkpoint = ModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",
     #                             monitor='val_loss', save_weights_only=False, save_best_only=True)
     checkpoint = AltModelCheckpoint(args.log_dir + "ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5",
-                                    model,
-                                    monitor='val_loss', save_weights_only=False, save_best_only=True)
+                                    model, monitor='val_loss', save_weights_only=False, save_best_only=True)
 
     #model.fit_generator(train_generator, len(train_set), args.no_epochs, verbose=2,
     #                    validation_data=test_generator, validation_steps=len(val_set),

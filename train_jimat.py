@@ -22,7 +22,7 @@ def parse_args(args):
 
     parser.add_argument('--output_path',
                         help='Path for saving a training model as a *.h5 file. Default is models/jimat_tiramisu.h5',
-                        default='models/jimat_tiramisu67.h5')
+                        default='models/jimat_tiramisu.h5')
     parser.add_argument('--path_to_raw',
                         help='Path to raw images used for training. Default is jimat/data/',
                         default='jimat/data')
